@@ -23,10 +23,29 @@ class Library:
                 json.dump(self.all_books, f)
                 print(f'Book: {book} added to the list')
 
+    def load_borrowed_db(self):
+        borrowed_database = json.load(open('borrowed.json', 'r'))
+        for borrow in borrowed_database:
+            self.borrowed.update({str(list(borrow.keys()))[2:-2]: str(list(borrow.values()))[2:-2]})
+
+    def write_to_json(self, lst, fn):
+        with open(fn, 'w', encoding='utf-8') as file:
+            file.write('[')
+            for key, value in lst.items():
+                if key != list(lst.keys())[-1]:
+                    x = '{"' + key + '": "' + value + '"},'
+                    file.write(x + '\n')
+                else:
+                    x = '{"' + key + '": "' + value + '"}'
+                    file.write(x)
+            file.write(']')
+
     def lend_book(self, name, book):
+        self.load_borrowed_db()
         if book in self.all_books:
             if book not in self.borrowed:
                 self.borrowed.update({book: name})
+                self.write_to_json(self.borrowed, 'borrowed.json')
                 print(f'{name} succesfully borrowed {book}')
             else:
                 print(f'Book is already borrowed to {self.borrowed[name]}')
@@ -34,8 +53,10 @@ class Library:
             print(f'Library {self.name} does not contain {book}')
 
     def return_book(self, name, book):
+        self.load_borrowed_db()
         if (book, name) in self.borrowed.items():
             self.borrowed.pop(book)
+            self.write_to_json(self.borrowed, 'borrowed.json')
             print(f'Succesfully returned {book} book, thank you {name}')
         elif book not in self.borrowed.keys():
             if name not in self.borrowed.values():
