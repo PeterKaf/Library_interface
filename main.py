@@ -18,10 +18,10 @@ class Library:
             print(f'This book is already in {self.name} library')
         else:
             self.all_books.append(book)
-            book_database = open(db_name, 'a')
-            book_database.write('\n')
-            book_database.write(book)
-            print(f'Book: {book} added to the list')
+            print(self.all_books)
+            with open('owned_books.json', 'w') as f:
+                json.dump(self.all_books, f)
+                print(f'Book: {book} added to the list')
 
     def lend_book(self, name, book):
         if book in self.all_books:
@@ -85,9 +85,9 @@ def main():
 
 if __name__ == '__main__':
     books = []
-    db_name = input('Enter name of a db you wish to load')
-    book_database = open(db_name, 'r')
+    db_name = "owned_books.json"
+    book_database = json.load(open(db_name, 'r'))
     for b in book_database:
-        books.append(b.strip())
+        books.append(b)
     lib1 = Library('SampleLibrary1', books)
     main()
