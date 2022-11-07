@@ -1,4 +1,7 @@
 # Main logic in OOP aproach
+import json
+
+
 class Library:
     def __init__(self, name, all_books):
         self.name = name
@@ -15,9 +18,9 @@ class Library:
             print(f'This book is already in {self.name} library')
         else:
             self.all_books.append(book)
-            book_Database = open(db_name, 'a')
-            book_Database.write('\n')
-            book_Database.write(book)
+            book_database = open(db_name, 'a')
+            book_database.write('\n')
+            book_database.write(book)
             print(f'Book: {book} added to the list')
 
     def lend_book(self, name, book):
@@ -83,8 +86,8 @@ def main():
 if __name__ == '__main__':
     books = []
     db_name = input('Enter name of a db you wish to load')
-    book_Database = open(db_name, 'r')
-    for b in book_Database:
+    book_database = open(db_name, 'r')
+    for b in book_database:
         books.append(b.strip())
     lib1 = Library('SampleLibrary1', books)
     main()
