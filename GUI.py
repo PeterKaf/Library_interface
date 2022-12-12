@@ -1,22 +1,26 @@
 import json
+from PIL import Image, ImageTk
 import tkinter as tk
-from tkinter import *
 import Classes
 
 db_name = "owned_books.json"
 book_database = json.load(open(db_name, 'r'))
 lib1 = Classes.Library('SampleLibrary1', book_database)
 
-window = Tk()
+window = tk.Tk()
+
+canvas = tk.Canvas(window, width=1920, height=1080)
+canvas.pack()
 # ########################################################TRACKERS######################################################
 is_but1_on = False
 is_but2_on = False
 is_but3_on = False
 is_but4_on = False
 
+is_anybutton_on = False
 # #########################################################CANVAS#######################################################
-donatebox_canvas = tk.Canvas(window, width=310, height=200)
-borrowbox_canvas = tk.Canvas(window, width=310, height=200)
+donatebox_canvas = tk.Canvas(window, width=310, height=200, borderwidth=5, relief="solid")
+borrowbox_canvas = tk.Canvas(window, width=310, height=200, borderwidth=5, relief="solid")
 
 # ########################################################FUNCTIONS#####################################################
 
@@ -103,50 +107,55 @@ def read_borrow():
 
 # ######################################################CHOICE BUTTONS##################################################
 
-choice_1 = Button(window, text="Display books in our stock", height=3, font=("Roman", "20"),
-                  command=lambda: button1_switch())
+choice_1 = tk.Button(window, text="Display books in our stock", height=3, font=("Roman", "20"),
+                     command=lambda: button1_switch())
 choice_1.place(anchor="nw", y=250)
 
-choice_2 = Button(window, text="Donate a book", height=3, font=("Roman", "20"),
-                  command=lambda: button2_switch())
+choice_2 = tk.Button(window, text="Donate a book", height=3, font=("Roman", "20"),
+                     command=lambda: button2_switch())
 choice_2.place(anchor="nw", y=400)
 
-donate_accept_button = Button(window, text="Add book", font=("Roman", "11"),
-                              command=read_donate)
+donate_accept_button = tk.Button(window, text="Add book", font=("Roman", "11"),
+                                 command=read_donate)
 
-choice_3 = Button(window, text="Borrow a book", height=3, font=("Roman", "20"),
-                  command=lambda: button3_switch())
+choice_3 = tk.Button(window, text="Borrow a book", height=3, font=("Roman", "20"),
+                     command=lambda: button3_switch())
 choice_3.place(anchor="nw", y=550)
 
-borrow_accept_button = Button(window, text="Add book", font=("Roman", "11"),
-                              command=read_borrow)
+borrow_accept_button = tk.Button(window, text="Add book", font=("Roman", "11"),
+                                 command=read_borrow)
 
-choice_4 = Button(window, text="Return a book", height=3, font=("Roman", "20"),
-                  command=lib1.return_book)
+choice_4 = tk.Button(window, text="Return a book", height=3, font=("Roman", "20"),
+                     command=lib1.return_book)
 choice_4.place(anchor="nw", y=700)
 
-exit_button = Button(window, text="Exit", height=3, width=5, font=("Roman", "20"), command=window.destroy)
+exit_button = tk.Button(window, text="Exit", height=3, width=5, font=("Roman", "20"), command=window.destroy)
 exit_button.place(anchor="nw", y=850)
 
 # ######################################################DISPLAY MENUS###################################################
-welcome_msg = Label(window, text=f'Welcome to our {lib1.name} library', font=("Roman", "35"))
-welcome_msg.pack()
+welcome_msg = tk.Label(window, text=f'Welcome to our {lib1.name} library', font=("Roman", "35"), borderwidth=5,
+                       relief="solid")
+welcome_msg.place(anchor="center", x=960, y=75)
 
-choice_prompt = Label(window, text="Please select one of following options:", font=("Roman", "25"))
+choice_prompt = tk.Label(window, text="Please select one of following options:", font=("Roman", "25"), borderwidth=5,
+                         relief="solid")
 choice_prompt.place(anchor="nw", y=150)
 
-booklist = Label(window, text=formatted_booklist(book_database), height=len(book_database), font=("Roman", "20"))
-donate_label = Label(window, text="Enter the name of the book you\n want to add:", font=("Roman", "11"))
-donate_accept_label = Label(window, text="Book added, thank you for your\n donation", font=("Roman", "11"))
+booklist = tk.Label(window, text=formatted_booklist(book_database), height=len(book_database), font=("Roman", "20"),
+                    borderwidth=5, relief="solid")
+donate_label = tk.Label(window, text="Enter the name of the book you\n want to add:", font=("Roman", "11"))
+donate_accept_label = tk.Label(window, text="Book added, thank you for your\n donation", font=("Roman", "11"))
 donate_input = tk.Entry(window)
 
-borrow_label = Label(window, text="Please fill the borrrow form")
-borrow_label_name = Label(window, text="Name:")
-borrow_label_book = Label(window, text="Name of the book:")
+borrow_label = tk.Label(window, text="Please fill the borrrow form")
+borrow_label_name = tk.Label(window, text="Name:")
+borrow_label_book = tk.Label(window, text="Name of the book:")
 borrow_input_name = tk.Entry(window)
 borrow_input_book = tk.Entry(window)
 
 window.title('User Interface')
 window.geometry("1920x1080")
-window['background'] = '#856ff8'
+bgImage = ImageTk.PhotoImage(Image.open("Background.jpg"))
+bg = canvas.create_image(0, 0, image=bgImage, anchor=tk.NW)
+
 window.mainloop()
