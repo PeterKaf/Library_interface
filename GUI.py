@@ -8,7 +8,6 @@ book_database = json.load(open(db_name, 'r'))
 lib1 = Classes.Library('SampleLibrary1', book_database)
 
 window = tk.Tk()
-
 canvas = tk.Canvas(window, width=1920, height=1080)
 canvas.pack()
 # ########################################################TRACKERS######################################################
@@ -31,6 +30,7 @@ def switch2_forget():
     donate_label.place_forget()
     donate_accept_label.place_forget()
     donate_accept_button.place_forget()
+    booklist_scroll.place_forget()
     is_but2_on = False
 
 
@@ -50,7 +50,10 @@ def button1_switch():
         booklist.place_forget()
         is_but1_on = False
     else:
-        booklist.place(anchor="se", x=1920, y=700)
+        booklist.place(anchor="se", x=1910, y=700)
+        booklist_scroll.configure(command=booklist.yview)
+        booklist_scroll.place(x=1900, y=397, height=booklist.winfo_height())
+        booklist_scroll.set(0.0, 0.0)
         is_but1_on = True
 
 
@@ -79,9 +82,10 @@ def button2_switch():
 
 
 def read_donate():
-    global donate_input
+    global donate_input, book_database
     x = donate_input.get()
     lib1.add_book(x)
+    booklist.insert(tk.END, x)
     donate_accept_label.place(anchor="nw", x=720, y=380)
 
 
@@ -146,8 +150,14 @@ choice_prompt = tk.Label(window, text="Please select one of following options:",
                          relief="solid")
 choice_prompt.place(anchor="nw", y=150)
 
-booklist = tk.Label(window, text=formatted_booklist(book_database), height=len(book_database), font=("Roman", "20"),
-                    borderwidth=5, relief="solid")
+
+booklist = tk.Listbox(window, height=10, font=("Roman", "20"), borderwidth=5, relief="solid")
+for books in lib1.all_books:
+    booklist.insert(tk.END, books)
+booklist_scroll = tk.Scrollbar(window, command=booklist.yview)
+booklist.configure(yscrollcommand=booklist_scroll.set)
+
+
 donate_label = tk.Label(window, text="Enter the name of the book you\n want to add:", font=("Roman", "11"))
 donate_accept_label = tk.Label(window, text="Book added, thank you for your\n donation", font=("Roman", "11"))
 donate_input = tk.Entry(window)
